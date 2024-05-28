@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>My Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            width: 40%;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .profile-img-container {
+            margin-top: 20px;
+        }
+
+        .profile-img-container img {
+            width: 200px;
+            /* Fixed width, you can change it as per your requirement */
+            height: 200px;
+            /* Fixed height, maintain aspect ratio */
+            object-fit: cover;
+            /* Maintain aspect ratio */
+            border-radius: 50%;
+            /* Circular mask */
+        }
+                .navbar {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .navbar img {
+            width: 60px;
+            height: 60px;
+            margin: 0 20px;
+            cursor: pointer;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            margin: 0 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <img src="/images/home.png" style="height: 55px; width: 55px;" alt="home"
+            onclick="location.href='/member/view';">
+        <img src="/images/user.png" alt="User Image" onclick="location.href='/member/mypage';">
+        <img src="/images/logout.png" style="width: 50px; height: 50px;" alt="Dashboard"
+            onclick="document.getElementById('logout').submit();">
+        <form id="logout" action="/member/logout" method="post"></form>
+        <img src="/images/alram.png" alt="Alarm" onclick="location.href ='/UserPost';">
+    </div>
+    <div class="container">
+        <h1>Welcome, <span th:text="${loggedInMember.memberName}">User</span>!</h1>
+        <p>Your email: <span th:text="${loggedInMember.memberEmail}"></span></p>
+
+        <div class="profile-img-container">
+            <!-- 현재 프로필 이미지 표시 -->
+            <img id="profileImage" src="/mypage/imgsource" alt="Profile Image" />
+        </div>
+
+        <!-- 파일 업로드 폼 -->
+        <form th:action="@{/member/upload}" method="post" enctype="multipart/form-data">
+            <label for="file">프로필 사진 변경</label>
+            <input type="file" id="file" name="file" required>
+            <button type="submit">Upload</button>
+        </form>
+
+    </div>
+</body>
+
+</html>

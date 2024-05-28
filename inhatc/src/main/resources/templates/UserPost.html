@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Posts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .post {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+
+        .post:last-child {
+            border-bottom: none;
+        }
+
+        .post-title {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .post-content {
+            margin-bottom: 10px;
+        }
+
+        .post-date {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .content-img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            margin-top: 10px;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 8px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .navbar {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .navbar img {
+            width: 60px;
+            height: 60px;
+            margin: 0 20px;
+            cursor: pointer;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            margin: 0 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <img src="/images/home.png" style="height: 55px; width: 55px;" alt="home" onclick="location.href='/member/view';">
+        <img src="/images/user.png" alt="User Image" onclick="location.href='/member/mypage';">
+        <img src="/images/logout.png" style="width: 50px; height: 50px;" alt="Dashboard"
+            onclick="document.getElementById('logout').submit();">
+        <form id="logout" action="/member/logout" method="post"></form>
+        <img src="/images/alram.png" alt="Alarm" onclick="location.href ='/UserPost';">
+    </div>
+
+    <div class="container">
+        <h1>User Posts</h1>
+        <div id="post-list"></div>
+    </div>
+
+    <!-- Modal -->
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="document.getElementById('postModal').style.display='none'">&times;</span>
+            <div id="postDetail"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('/member/UserPost', {
+                method: 'GET',
+                credentials: 'include'  // Include cookies for session
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const postList = document.getElementById('post-list');
+                    if (Array.isArray(data) && data.length > 0) {
+                        data.forEach(post => {
+                            const postDiv = document.createElement('div');
+                            postDiv.className = 'post';
+                            postDiv.onclick = () => viewPost(post.id); // Add onclick event to call viewPost
+
+                            const postTitle = document.createElement('div');
+                            postTitle.className = 'post-title';
+                            postTitle.textContent = post.writer || 'No Title';
+
+                            const postContent = document.createElement('div');
+                            postContent.className = 'post-content';
+                            postContent.textContent = post.content || 'No Content';
+
+                            const postDate = document.createElement('div');
+                            postDate.className = 'post-date';
+                            postDate.textContent = `Created: ${post.createdDate || 'No Date'} | Modified: ${post.modifiedDate || 'No Date'}`;
+
+                            postDiv.appendChild(postTitle);
+                            postDiv.appendChild(postContent);
+                            postDiv.appendChild(postDate);
+
+                            if (post.imgsource) {
+                                const contentImg = document.createElement('img');
+                                contentImg.className = 'content-img';
+                                contentImg.src = `/image/${post.id}`;
+                                postDiv.appendChild(contentImg);
+                            }
+
+                            postList.appendChild(postDiv);
+                        });
+                    } else {
+                        postList.textContent = 'No posts found for this user.';
+                    }
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error);
+                    document.getElementById('post-list').textContent = 'Error loading posts.';
+                });
+        });
+
+        function viewPost(postId) {
+            const modal = document.getElementById('postModal');
+            modal.style.display = 'block';
+
+            const modalUrl = `/member/view?id=${postId}`;
+            window.history.pushState({}, '', modalUrl);
+
+            fetch(`/view/${postId}`)
+                .then(response => response.json())
+                .then(post => {
+                    const postDetailContainer = document.getElementById('postDetail');
+                    postDetailContainer.innerHTML = '';  // 내용을 비우고 새로운 정보를 추가
+
+                    // 유저 이미지 요소 생성
+                    const img = document.createElement('img');
+                    img.className = 'profile-img';
+                    img.src = `/Userimgsource?email=${encodeURIComponent(post.writer)}`;
+                    img.style.width = '100px'; // 이미지 크기 조정
+                    img.style.height = '100px';
+                    img.style.borderRadius = '50%'; // 이미지를 원형으로 만들기
+
+                    // 포스트 내용 이미지 요소 생성
+                    const contentImg = document.createElement('img');
+                    contentImg.className = 'content-img';
+                    contentImg.src = `/image/${postId}`;
+                    contentImg.style.width = '200px'; // 이미지 크기 조정
+                    contentImg.style.height = '200px';
+
+                    // 작성자 이름과 포스트 내용, 조회수, 생성 날짜 추가
+                    const contentHtml = `
+                        <h2>${post.writer}</h2>
+                        <p>${post.content}</p>
+                        <p><strong>조회수:</strong> ${post.hits}</p>
+                        <p>${new Date(post.createdDate).toLocaleString()}</p>
+                    `;
+
+                    // 요소를 postDetailContainer에 추가
+                    postDetailContainer.appendChild(img);
+                    postDetailContainer.innerHTML += contentHtml;
+                    postDetailContainer.appendChild(contentImg);
+
+                    fetchComments(postId); // Assuming fetchComments is defined elsewhere
+                })
+                .catch(error => console.error('Error fetching post details:', error));
+        }
+    </script>
+</body>
+
+</html>
