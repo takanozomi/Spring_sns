@@ -1,6 +1,7 @@
 ![header](https://capsule-render.vercel.app/api?type=wave&color=auto&height=300&section=header&text=SpringSNS%20&fontSize=90)<br>
 ![](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white)
 ![](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)<br>
+![](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white)<br>
 <hr>
 <p>•Spring boot로 제작한 첫 프로젝트 입니다.</p>
 <p>•요즘 사회에서는 SNS를 모바일 환경에서 사용하기 때문에 Spring boot를 학습하면서</p>
