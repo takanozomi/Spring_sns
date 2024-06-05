@@ -2,5 +2,8 @@
 ![](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white)
 ![](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)<br>
 <hr>
-Spring boot로 제작한 첫 프로젝트 입니다.
-현대 사회에서 사용하는 sns를 벤치마킹하여 제작하였습니다.
+·Spring boot로 제작한 첫 프로젝트 입니다.
+·요즘 사회에서는 SNS를 모바일 환경에서 사용하기 때문에 Spring boot를 학습하면서
+PC환경에서 SNS를 왜 사용하지 않는지 아니면 왜 
+·현대 사회에서 사용하는 sns를 벤치마킹하여 제작하였습니다.
+![화면 캡처 2024-06-05 142502](https://github.com/takanozomi/Spring_sns/assets/121867223/8fe14ab7-68c7-4d10-a68a-1e072e8a13c0)
