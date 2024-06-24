@@ -95,7 +95,7 @@ DTO는 컨트롤러와 서비스 또는 서비스와 데이터 접근 레이어 
 
 - **Security Configuration**: 보안 설정을 구성하여 애플리케이션의 보안 정책을 정의합니다. 예: `WebSecurityConfig.java`
 
-### 아키텍처 다이어그램
+
 
 
 
